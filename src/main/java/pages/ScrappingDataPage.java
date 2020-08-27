@@ -1,13 +1,17 @@
 package pages;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -73,14 +77,15 @@ public class ScrappingDataPage extends PageBase {
 	//	System.out.println("Please enter the selector to get the Product Details");
 	//	String Pro_Details = reader.readLine();
 		
-		System.out.println("Please enter the Class name of Product Image");
-		String Pro_Image = reader.readLine();
+	//	System.out.println("Please enter the Class name of Product Image");
+	//	String Pro_Image = reader.readLine();
 		
 		System.out.println("Please Enter the File Path that data will be saved in : ");
 		String FilePath = reader.readLine();
 		
 		List<Product> productelements =new ArrayList<Product>();
 		
+		int countf =0;
 		for (String href : all_elements_href)
 		{
 			Product prod = new Product();
@@ -101,6 +106,13 @@ public class ScrappingDataPage extends PageBase {
 			WebElement ProductDetails = Driver.findElement(By.cssSelector(".description__sidebar-content p span"));
 			prod.Details = ProductDetails.getText();
 			
+			WebElement ImageSrc = Driver.findElement(By.className("product-image__image"));
+			prod.ImageSrc = ImageSrc.getAttribute("src");
+			
+			URL ImageURL = new URL (prod.ImageSrc);
+			BufferedImage SaveImage = ImageIO.read(ImageURL);
+			ImageIO.write(SaveImage, "png", new File(countf +".png"));	
+			countf++;
 			
 			productelements.add(prod);
 			
