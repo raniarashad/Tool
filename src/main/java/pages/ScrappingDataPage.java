@@ -60,7 +60,7 @@ public class ScrappingDataPage extends PageBase {
 
 	public void Open_Href_FromList () throws IOException
 	{
-		System.out.println("let's begin to sniff the product data");
+		System.out.println("let's begin to sniff the products data");
 
 		System.out.println("Please enter the Class Name to get the Product Name : ");
 		String Pro_Name = reader.readLine();
@@ -85,7 +85,6 @@ public class ScrappingDataPage extends PageBase {
 		
 		List<Product> productelements =new ArrayList<Product>();
 		
-		int countf =0;
 		for (String href : all_elements_href)
 		{
 			Product prod = new Product();
@@ -104,15 +103,25 @@ public class ScrappingDataPage extends PageBase {
 			prod.Color = ProductColor.getText();
 			
 			WebElement ProductDetails = Driver.findElement(By.cssSelector(".description__sidebar-content p span"));
-			prod.Details = ProductDetails.getText();
+			prod.Details = ProductDetails.getText();			
 			
-			WebElement ImageSrc = Driver.findElement(By.className("product-image__image"));
-			prod.ImageSrc = ImageSrc.getAttribute("src");
+			WebElement AddtoBagBtn = Driver.findElement(By.className("add-to-bag__add"));
+
+			List <WebElement> ImageList = Driver.findElements(By.cssSelector(".product-page__images-container .product-image .product-image__image"));
+			for (int i = 0 ; i<ImageList.size(); i++)
+			{		
+				WebElement ImageList2 = ImageList.get(i);
+				prod.ImageSrc = ImageList2.getAttribute("src");
+				URL ImageURL = new URL (prod.ImageSrc);
+				BufferedImage SaveImage = ImageIO.read(ImageURL);
+				String Code = AddtoBagBtn.getAttribute("data-partnumber");
+				ImageIO.write(SaveImage, "png", new File(Code + i +".png"));	
+			}
 			
-			URL ImageURL = new URL (prod.ImageSrc);
-			BufferedImage SaveImage = ImageIO.read(ImageURL);
-			ImageIO.write(SaveImage, "png", new File(countf +".png"));	
-			countf++;
+		//	URL ImageURL = new URL (prod.ImageSrc);
+		//	BufferedImage SaveImage = ImageIO.read(ImageURL);
+		//	ImageIO.write(SaveImage, "png", new File(countf +".png"));	
+		//	countf++;
 			
 			productelements.add(prod);
 			
