@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="1001809" started-at="2020-08-26T16:04:35 EET" finished-at="2020-08-26T16:21:17 EET">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="1001809" started-at="2020-08-26T16:04:35 EET" finished-at="2020-08-26T16:21:17 EET">
+      <class name="tests.ScrappingDataTest">
+        <test-method status="PASS" signature="StartDriver(java.lang.String)[pri:0, instance:tests.ScrappingDataTest@131276c2]" name="StartDriver" is-config="true" duration-ms="26897" started-at="2020-08-26T16:04:09 EET" finished-at="2020-08-26T16:04:35 EET">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- StartDriver -->
+        <test-method status="PASS" signature="Scrapping()[pri:0, instance:tests.ScrappingDataTest@131276c2]" name="Scrapping" duration-ms="1001745" started-at="2020-08-26T16:04:36 EET" finished-at="2020-08-26T16:21:17 EET">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- Scrapping -->
+        <test-method status="PASS" signature="ScreenShot(org.testng.ITestResult)[pri:0, instance:tests.ScrappingDataTest@131276c2]" name="ScreenShot" is-config="true" duration-ms="2" started-at="2020-08-26T16:21:17 EET" finished-at="2020-08-26T16:21:17 EET">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=Scrapping status=SUCCESS method=ScrappingDataTest.Scrapping()[pri:0, instance:tests.ScrappingDataTest@131276c2] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- ScreenShot -->
+      </class> <!-- tests.ScrappingDataTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

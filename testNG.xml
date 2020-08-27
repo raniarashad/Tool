@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="gocardi">
+ <parameter name = "browser" value = "chrome"></parameter>
+  <test name="Test">
+    <classes>
+      <class name="tests.RegisterTest"/>
+      <class name ="tests.LoginTest"></class>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
