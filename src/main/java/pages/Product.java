@@ -7,4 +7,5 @@ public class Product {
 	public String Color;
 	public String Details;
 	public String ImageSrc;
+	public String SKUcode;
 }
