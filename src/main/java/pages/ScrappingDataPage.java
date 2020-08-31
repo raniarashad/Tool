@@ -62,17 +62,17 @@ public class ScrappingDataPage extends PageBase {
 	{
 		System.out.println("let's begin to sniff the products data");
 
-		System.out.println("Please enter the Class Name to get the Product Name : ");
-		String Pro_Name = reader.readLine();
+		//System.out.println("Please enter the Class Name to get the Product Name : ");
+		//String Pro_Name = reader.readLine();
 
-		System.out.println("Please enter the Class Name to get the Product Price : ");
-		String Pro_Price = reader.readLine();
+		//System.out.println("Please enter the Class Name to get the Product Price : ");
+		//String Pro_Price = reader.readLine();
 
-		System.out.println("Please enter the Class Name to get the Product Brand");
-		String Pro_Brand = reader.readLine();
+		//System.out.println("Please enter the Class Name to get the Product Brand");
+		//String Pro_Brand = reader.readLine();
 
-		System.out.println("Please enter the Class Name to get the Color name");
-		String Pro_Color = reader.readLine();
+		//System.out.println("Please enter the Class Name to get the Color name");
+		//String Pro_Color = reader.readLine();
 
 		//	System.out.println("Please enter the selector to get the Product Details");
 		//	String Pro_Details = reader.readLine();
@@ -97,16 +97,16 @@ public class ScrappingDataPage extends PageBase {
 				WebElement imagebutton = ImagesList.get(j);
 				imagebutton.click();
 
-				WebElement ProductName  = Driver.findElement(By.className(Pro_Name));
+				WebElement ProductName  = Driver.findElement(By.className("product__name"));
 				prod.Name = ProductName.getText();
 
-				WebElement ProductPrice = Driver.findElement(By.className(Pro_Price));
+				WebElement ProductPrice = Driver.findElement(By.className("price-display__from"));
 				prod.Price = ProductPrice.getText();
 
-				WebElement ProductBrand = Driver.findElement(By.className(Pro_Brand));
+				WebElement ProductBrand = Driver.findElement(By.className("product__brand"));
 				prod.Brand = ProductBrand.getText();
 
-				WebElement ProductColor = Driver.findElement(By.className(Pro_Color));
+				WebElement ProductColor = Driver.findElement(By.className("attribute-selector__selected"));
 				prod.Color = ProductColor.getText();
 
 				WebElement ProductDetails = Driver.findElement(By.cssSelector(".description__sidebar-content p span"));
@@ -114,6 +114,11 @@ public class ScrappingDataPage extends PageBase {
 
 				WebElement AddtoBagBtn = Driver.findElement(By.className("add-to-bag__add"));
 
+		    	List <WebElement> SizeList = Driver.findElements(By.cssSelector("[data-attribute='PRODUCT_ATTR_SIZE_UK'] button span"));
+		    	for (int k=0 ;k<SizeList.size();k++ )
+		    	{
+		    		prod.Size = SizeList.get(k).getText();
+		    	}
 				List <WebElement> ImageList = Driver.findElements(By.cssSelector(".product-page__images-container .product-image .product-image__image"));
 				for (int i = 0 ; i<ImageList.size(); i++)
 				{		
@@ -123,7 +128,7 @@ public class ScrappingDataPage extends PageBase {
 					BufferedImage SaveImage = ImageIO.read(ImageURL);
 					prod.SKUcode = AddtoBagBtn.getAttribute("data-partnumber");
 					sleep(5);
-					ImageIO.write(SaveImage, "png", new File(prod.SKUcode + prod.Color +".png"));	
+					ImageIO.write(SaveImage, "png", new File(prod.SKUcode + i +".png"));	
 				}
 
 				//	URL ImageURL = new URL (prod.ImageSrc);
@@ -160,6 +165,7 @@ public class ScrappingDataPage extends PageBase {
 			sheet.getRow(i).createCell(3).setCellValue(products.get(i).Color);
 			sheet.getRow(i).createCell(4).setCellValue(products.get(i).Details);
 			sheet.getRow(i).createCell(5).setCellValue(products.get(i).SKUcode);
+			sheet.getRow(i).createCell(6).setCellValue(products.get(i).Size);
 
 		}
 		FileOutputStream output = new FileOutputStream(source);

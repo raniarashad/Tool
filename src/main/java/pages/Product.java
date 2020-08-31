@@ -8,4 +8,5 @@ public class Product {
 	public String Details;
 	public String ImageSrc;
 	public String SKUcode;
+	public String Size;
 }
