@@ -43,9 +43,9 @@ public class ScrappingDataPage extends PageBase {
 		sleep(10);
 		System.out.println("begin");
 
-		System.out.println("Please enter the Class Name : ");
-		String selector = reader.readLine();
-		List <WebElement> theListOfItems  = (List<WebElement>) Driver.findElements(By.className(selector));
+		//System.out.println("Please enter the Class Name : ");
+		//String selector = reader.readLine();
+		List <WebElement> theListOfItems  = (List<WebElement>) Driver.findElements(By.className("product-tile__imagery"));
 
 		sleep(10);
 
@@ -88,55 +88,57 @@ public class ScrappingDataPage extends PageBase {
 
 		for (String href : all_elements_href)
 		{
-			Product prod = new Product();
 			Driver.navigate().to(href);
 			sleep(5);
-			List<WebElement> ImagesList = Driver.findElements(By.cssSelector("[data-attribute='PRODUCT_ATTR_PRODUCT_ATTR_COLOUR'] button"));
-			for ( int j = 0 ; j<ImagesList.size(); j++ )
+			//	List<WebElement> ColorList = Driver.findElements(By.cssSelector("[data-attribute='PRODUCT_ATTR_PRODUCT_ATTR_COLOUR'] button"));
+			//for ( int j = 0 ; j<ColorList.size(); j++ )
+			//{
+			//	WebElement imagebutton = ColorList.get(j);
+			//	imagebutton.click();
+
+			WebElement ProductName  = Driver.findElement(By.className("product__name"));
+
+			WebElement ProductPrice = Driver.findElement(By.className("price-display__from"));
+
+			WebElement ProductBrand = Driver.findElement(By.className("product__brand"));
+
+			WebElement ProductColor = Driver.findElement(By.className("attribute-selector__selected"));
+
+			WebElement ProductDetails = Driver.findElement(By.cssSelector(".description__sidebar-content p span"));
+
+			WebElement AddtoBagBtn = Driver.findElement(By.className("add-to-bag__add"));
+
+			String SKU = AddtoBagBtn.getAttribute("data-partnumber");
+			
+			List <WebElement> SizeList = Driver.findElements(By.cssSelector("[data-attribute='PRODUCT_ATTR_SIZE_UK'] button"));
+			for (int k=0 ;k<SizeList.size();k++ )
 			{
-				WebElement imagebutton = ImagesList.get(j);
-				imagebutton.click();
-
-				WebElement ProductName  = Driver.findElement(By.className("product__name"));
+				Product prod = new Product();
+				WebElement Sizelisting = SizeList.get(k);
+				prod.Size= Sizelisting.getText();
 				prod.Name = ProductName.getText();
-
-				WebElement ProductPrice = Driver.findElement(By.className("price-display__from"));
 				prod.Price = ProductPrice.getText();
-
-				WebElement ProductBrand = Driver.findElement(By.className("product__brand"));
 				prod.Brand = ProductBrand.getText();
-
-				WebElement ProductColor = Driver.findElement(By.className("attribute-selector__selected"));
 				prod.Color = ProductColor.getText();
-
-				WebElement ProductDetails = Driver.findElement(By.cssSelector(".description__sidebar-content p span"));
-				prod.Details = ProductDetails.getText();			
-
-				WebElement AddtoBagBtn = Driver.findElement(By.className("add-to-bag__add"));
-
-		    	List <WebElement> SizeList = Driver.findElements(By.cssSelector("[data-attribute='PRODUCT_ATTR_SIZE_UK'] button span"));
-		    	for (int k=0 ;k<SizeList.size();k++ )
-		    	{
-		    		prod.Size = SizeList.get(k).getText();
-		    	}
-				List <WebElement> ImageList = Driver.findElements(By.cssSelector(".product-page__images-container .product-image .product-image__image"));
-				for (int i = 0 ; i<ImageList.size(); i++)
-				{		
-					WebElement ImageList2 = ImageList.get(i);
-					prod.ImageSrc = ImageList2.getAttribute("src");
-					URL ImageURL = new URL (prod.ImageSrc);
-					BufferedImage SaveImage = ImageIO.read(ImageURL);
-					prod.SKUcode = AddtoBagBtn.getAttribute("data-partnumber");
-					sleep(5);
-					ImageIO.write(SaveImage, "png", new File(prod.SKUcode + i +".png"));	
-				}
-
+				prod.Details = ProductDetails.getText();	
+				prod.SKUcode = SKU;
+				productelements.add(prod);
 				//	URL ImageURL = new URL (prod.ImageSrc);
 				//	BufferedImage SaveImage = ImageIO.read(ImageURL);
 				//	ImageIO.write(SaveImage, "png", new File(countf +".png"));	
 				//	countf++;
+				//}
+			}
 
-				productelements.add(prod);
+			List <WebElement> ImageList = Driver.findElements(By.cssSelector(".product-page__images-container .product-image .product-image__image"));
+			for (int i = 0 ; i<ImageList.size(); i++)
+			{		
+				WebElement ImageList2 = ImageList.get(i);
+				String ImageSrc = ImageList2.getAttribute("src");
+				URL ImageURL = new URL (ImageSrc);
+				BufferedImage SaveImage = ImageIO.read(ImageURL);
+				sleep(5);
+				ImageIO.write(SaveImage, "png", new File(SKU + i +".png"));	
 			}
 		}
 		WriteDataToExcelSheet(FilePath, productelements);
@@ -150,22 +152,24 @@ public class ScrappingDataPage extends PageBase {
 		FileInputStream input = new FileInputStream(source);
 		XSSFWorkbook wb = new XSSFWorkbook(input);
 		XSSFSheet sheet = wb.getSheetAt(0);
-		//	sheet.createRow(0).createCell(0).setCellValue("Product Name");
-		//    sheet.getRow(0).createCell(1).setCellValue("Product Price");
-		//   sheet.getRow(0).createCell(2).setCellValue("Product Brand");
-		//   sheet.getRow(0).createCell(3).setCellValue("Product Color");
-		//   sheet.getRow(0).createCell(4).setCellValue("Description");
+		sheet.createRow(1).createCell(0).setCellValue("Product Name");
+		sheet.getRow(1).createCell(1).setCellValue("Product Price");
+	    sheet.getRow(1).createCell(2).setCellValue("Product Brand");
+		sheet.getRow(1).createCell(3).setCellValue("Product Color");
+		sheet.getRow(1).createCell(4).setCellValue("Description");
+		sheet.getRow(1).createCell(5).setCellValue("SKU Code");
+		sheet.getRow(1).createCell(6).setCellValue("Size");
 		for (int i = 0 ; i < products.size(); i++)
 		{		
 
 			sleep(5);
-			sheet.createRow(i).createCell(0).setCellValue(products.get(i).Name);
-			sheet.getRow(i).createCell(1).setCellValue(products.get(i).Price);
-			sheet.getRow(i).createCell(2).setCellValue(products.get(i).Brand);
-			sheet.getRow(i).createCell(3).setCellValue(products.get(i).Color);
-			sheet.getRow(i).createCell(4).setCellValue(products.get(i).Details);
-			sheet.getRow(i).createCell(5).setCellValue(products.get(i).SKUcode);
-			sheet.getRow(i).createCell(6).setCellValue(products.get(i).Size);
+			sheet.createRow(i+2).createCell(0).setCellValue(products.get(i).Name);
+			sheet.getRow(i+2).createCell(1).setCellValue(products.get(i).Price);
+			sheet.getRow(i+2).createCell(2).setCellValue(products.get(i).Brand);
+			sheet.getRow(i+2).createCell(3).setCellValue(products.get(i).Color);
+			sheet.getRow(i+2).createCell(4).setCellValue(products.get(i).Details);
+			sheet.getRow(i+2).createCell(5).setCellValue(products.get(i).SKUcode);
+			sheet.getRow(i+2).createCell(6).setCellValue(products.get(i).Size);
 
 		}
 		FileOutputStream output = new FileOutputStream(source);

@@ -1,5 +1,7 @@
 package pages;
 
+import java.util.List;
+
 public class Product {
 	public String Name; 
 	public String Price;
