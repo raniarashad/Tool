@@ -107,6 +107,8 @@ public class ScrappingDataPage extends PageBase {
 			WebElement ProductDetails = Driver.findElement(By.cssSelector(".description__sidebar-content p span"));
 
 			WebElement AddtoBagBtn = Driver.findElement(By.className("add-to-bag__add"));
+			
+			WebElement ProductCode = Driver.findElement(By.className("description__style"));
 
 			String SKU = AddtoBagBtn.getAttribute("data-partnumber");
 			
@@ -118,10 +120,20 @@ public class ScrappingDataPage extends PageBase {
 				prod.Size= Sizelisting.getText();
 				prod.Name = ProductName.getText();
 				prod.Price = ProductPrice.getText();
+				prod.Price = prod.Price.replace("FROM £", "").replace("£", "");
 				prod.Brand = ProductBrand.getText();
 				prod.Color = ProductColor.getText();
 				prod.Details = ProductDetails.getText();	
+				prod.ProductCode = ProductCode.getText();
+				prod.ProductCode = prod.ProductCode.replace("Style #: ", "");
 				prod.SKUcode = SKU;
+				prod.Stock = "100";
+				prod.ColorCode = "#000000";
+				prod.shipmentCost = "0";
+				prod.published = "yes";
+				prod.Active = "yes";
+				prod.CategoryRow = "2";
+				prod.BrandEnable = "yes";
 				productelements.add(prod);
 				//	URL ImageURL = new URL (prod.ImageSrc);
 				//	BufferedImage SaveImage = ImageIO.read(ImageURL);
@@ -129,7 +141,6 @@ public class ScrappingDataPage extends PageBase {
 				//	countf++;
 				//}
 			}
-
 			List <WebElement> ImageList = Driver.findElements(By.cssSelector(".product-page__images-container .product-image .product-image__image"));
 			for (int i = 0 ; i<ImageList.size(); i++)
 			{		
@@ -142,39 +153,65 @@ public class ScrappingDataPage extends PageBase {
 			}
 		}
 		WriteDataToExcelSheet(FilePath, productelements);
-
 		System.out.println("Done");
 	}
 
 	public void WriteDataToExcelSheet (String Filepath , List<Product> products) throws IOException
 	{
-		File source  = new File(Filepath);
+		File source = new File(Filepath);
 		FileInputStream input = new FileInputStream(source);
 		XSSFWorkbook wb = new XSSFWorkbook(input);
-		XSSFSheet sheet = wb.getSheetAt(0);
-		sheet.createRow(1).createCell(0).setCellValue("Product Name");
-		sheet.getRow(1).createCell(1).setCellValue("Product Price");
-	    sheet.getRow(1).createCell(2).setCellValue("Product Brand");
-		sheet.getRow(1).createCell(3).setCellValue("Product Color");
-		sheet.getRow(1).createCell(4).setCellValue("Description");
-		sheet.getRow(1).createCell(5).setCellValue("SKU Code");
-		sheet.getRow(1).createCell(6).setCellValue("Size");
+		XSSFSheet CatSheet = wb.getSheetAt(0);
+		CatSheet.createRow(0).createCell(0).setCellValue("Cat1En");
+		CatSheet.createRow(0).createCell(1).setCellValue("Cat1Ar");
+		CatSheet.createRow(0).createCell(2).setCellValue("Cat1Enable");
+		XSSFSheet sheet = wb.createSheet("Products");
+		sheet.createRow(1).createCell(0).setCellValue("ProductCode");
+		sheet.getRow(1).createCell(1).setCellValue("SKU");
+		sheet.getRow(1).createCell(2).setCellValue("NameEn");
+	    sheet.getRow(1).createCell(3).setCellValue("NameAr");
+		sheet.getRow(1).createCell(4).setCellValue("BriefDescription En");
+		sheet.getRow(1).createCell(5).setCellValue("BriefDescription Ar");
+		sheet.getRow(1).createCell(6).setCellValue("Brand");
+		sheet.getRow(1).createCell(7).setCellValue("Brand Ar");
+		sheet.getRow(1).createCell(8).setCellValue("BrandEnable");
+		sheet.getRow(1).createCell(9).setCellValue("Price");
+		sheet.getRow(1).createCell(10).setCellValue("Size");
+		sheet.getRow(1).createCell(11).setCellValue("ColorEn");
+		sheet.getRow(1).createCell(12).setCellValue("ColorAr");
+		sheet.getRow(1).createCell(13).setCellValue("ColorCode");
+		sheet.getRow(1).createCell(14).setCellValue("Stock");
+		sheet.getRow(1).createCell(15).setCellValue("Published");
+		sheet.getRow(1).createCell(16).setCellValue("Active");
+		sheet.getRow(1).createCell(17).setCellValue("ShipmentCost");
+		sheet.getRow(1).createCell(18).setCellValue("CategoryRow");
+		
 		for (int i = 0 ; i < products.size(); i++)
 		{		
-
 			sleep(5);
-			sheet.createRow(i+2).createCell(0).setCellValue(products.get(i).Name);
-			sheet.getRow(i+2).createCell(1).setCellValue(products.get(i).Price);
-			sheet.getRow(i+2).createCell(2).setCellValue(products.get(i).Brand);
-			sheet.getRow(i+2).createCell(3).setCellValue(products.get(i).Color);
+			sheet.createRow(i+2).createCell(0).setCellValue(products.get(i).ProductCode);
+			sheet.getRow(i+2).createCell(1).setCellValue(products.get(i).SKUcode);
+			sheet.getRow(i+2).createCell(2).setCellValue(products.get(i).Name);
+			sheet.getRow(i+2).createCell(3).setCellValue(products.get(i).Name);
 			sheet.getRow(i+2).createCell(4).setCellValue(products.get(i).Details);
-			sheet.getRow(i+2).createCell(5).setCellValue(products.get(i).SKUcode);
-			sheet.getRow(i+2).createCell(6).setCellValue(products.get(i).Size);
-
+			sheet.getRow(i+2).createCell(5).setCellValue(products.get(i).Details);
+			sheet.getRow(i+2).createCell(6).setCellValue(products.get(i).Brand);
+			sheet.getRow(i+2).createCell(7).setCellValue(products.get(i).Brand);
+			sheet.getRow(i+2).createCell(8).setCellValue(products.get(i).BrandEnable);
+			sheet.getRow(i+2).createCell(9).setCellValue(products.get(i).Price);
+			sheet.getRow(i+2).createCell(10).setCellValue(products.get(i).Size);
+			sheet.getRow(i+2).createCell(11).setCellValue(products.get(i).Color);
+			sheet.getRow(i+2).createCell(12).setCellValue(products.get(i).Color);
+			sheet.getRow(i+2).createCell(13).setCellValue(products.get(i).ColorCode);
+			sheet.getRow(i+2).createCell(14).setCellValue(products.get(i).Stock);
+			sheet.getRow(i+2).createCell(15).setCellValue(products.get(i).published);
+			sheet.getRow(i+2).createCell(16).setCellValue(products.get(i).Active);
+			sheet.getRow(i+2).createCell(17).setCellValue(products.get(i).shipmentCost);
+			sheet.getRow(i+2).createCell(18).setCellValue(products.get(i).CategoryRow);		
 		}
 		FileOutputStream output = new FileOutputStream(source);
 		wb.write(output);
-		wb.close();	
+		wb.close();
 
 	}
 
