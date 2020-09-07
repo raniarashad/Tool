@@ -4,21 +4,17 @@ import java.io.IOException;
 
 import org.testng.annotations.Test;
 
+import pages.Testpage;
 import pages.test;
 
 public class TestTest extends TestBase{
 
-	test object;
+	Testpage object;
 	
 	@Test
-	public void testt()
+	public void testt() throws IOException
 	{
-		object = new test(driver);
-		try {
-			object.testOnly();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		object = new Testpage(driver);
+		object.Test();
 	}
 }

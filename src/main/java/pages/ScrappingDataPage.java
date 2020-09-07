@@ -111,7 +111,7 @@ public class ScrappingDataPage extends PageBase {
 			WebElement ProductCode = Driver.findElement(By.className("description__style"));
 
 			String SKU = AddtoBagBtn.getAttribute("data-partnumber");
-			
+			sleep(10);
 			List <WebElement> SizeList = Driver.findElements(By.cssSelector("[data-attribute='PRODUCT_ATTR_SIZE_UK'] button"));
 			for (int k=0 ;k<SizeList.size();k++ )
 			{
@@ -141,7 +141,9 @@ public class ScrappingDataPage extends PageBase {
 				//	countf++;
 				//}
 			}
+			js.executeScript("window.scroll({top: 1000, left: 0, behavior: 'smooth'});");
 			List <WebElement> ImageList = Driver.findElements(By.cssSelector(".product-page__images-container .product-image .product-image__image"));
+			int count = 0 ;
 			for (int i = 0 ; i<ImageList.size(); i++)
 			{		
 				WebElement ImageList2 = ImageList.get(i);
@@ -149,7 +151,8 @@ public class ScrappingDataPage extends PageBase {
 				URL ImageURL = new URL (ImageSrc);
 				BufferedImage SaveImage = ImageIO.read(ImageURL);
 				sleep(5);
-				ImageIO.write(SaveImage, "png", new File(SKU + i +".png"));	
+				ImageIO.write(SaveImage, "png", new File(SKU + count +".png"));	
+				count++;
 			}
 		}
 		WriteDataToExcelSheet(FilePath, productelements);
@@ -212,9 +215,6 @@ public class ScrappingDataPage extends PageBase {
 		FileOutputStream output = new FileOutputStream(source);
 		wb.write(output);
 		wb.close();
-
 	}
-
-
 }
 
