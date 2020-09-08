@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -27,29 +28,38 @@ public class Testpage extends PageBase {
 	JavascriptExecutor js;	
 	WebDriver Driver;
 	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	
+
 	@FindBy(xpath = "//button[@class='cookie-notice__agree-button button']")
 	WebElement acceptCookies;
-	
+
 	public void Test() throws IOException
 	{
 		ClickButton(acceptCookies);
 		sleep(10);
 		System.out.println("begin");
 		js.executeScript("window.scroll({top: 1000, left: 0, behavior: 'smooth'});");
-		sleep(10);
+		sleep(4);
+		WebElement AddtoBagBtn = Driver.findElement(By.className("add-to-bag__add"));
+		String SKU = AddtoBagBtn.getAttribute("data-partnumber");
+
 		List <WebElement> ImageList = Driver.findElements(By.cssSelector(".product-page__images-container img"));
+		ArrayList<String> imagesrclist =new ArrayList<String>();
 		int count = 0 ;
 		for (int i = 0 ; i<ImageList.size(); i++)
 		{		
 			WebElement ImageList2 = ImageList.get(i);
 			String ImageSrc = ImageList2.getAttribute("src");
-			URL ImageURL = new URL (ImageSrc);
-			BufferedImage SaveImage = ImageIO.read(ImageURL);
-			ImageIO.write(SaveImage, "png", new File(count +".png"));	
-			count++;
-		}
-		System.out.println();
-	}
+			imagesrclist.add(ImageSrc);
 
+		}
+		String FOLDER = "C:\\Users\\rania.rashad\\Desktop\\Automation\\AutomationFramework-master\\";
+		for (int j = 0 ; j<imagesrclist.size() ; j++)
+		{
+			URL  ImageURL = new URL (imagesrclist.get(j));
+			BufferedImage SaveImage = ImageIO.read(ImageURL);
+			File file = new File(FOLDER + j);
+			file.mkdirs();
+			ImageIO.write(SaveImage, "png", new File(file , SKU +".png"));	
+		}
+	}
 }

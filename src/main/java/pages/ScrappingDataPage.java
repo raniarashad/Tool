@@ -40,21 +40,20 @@ public class ScrappingDataPage extends PageBase {
 	public void ScrappingInnerProductURL() throws IOException {
 
 		ClickButton(acceptCookies);
-		sleep(10);
+		sleep(5);
 		System.out.println("begin");
 
 		//System.out.println("Please enter the Class Name : ");
 		//String selector = reader.readLine();
 		List <WebElement> theListOfItems  = (List<WebElement>) Driver.findElements(By.className("product-tile__imagery"));
 
-		sleep(10);
+		sleep(5);
 
 		for (int i = 0; i <theListOfItems.size(); i++) 
 		{
 			String list = theListOfItems.get(i).getAttribute("href");
 			all_elements_href.add(list);
 			js.executeScript("window.scrollBy(0,2000)");
-			sleep(10);		
 		}
 	}
 
@@ -89,7 +88,7 @@ public class ScrappingDataPage extends PageBase {
 		for (String href : all_elements_href)
 		{
 			Driver.navigate().to(href);
-			sleep(5);
+			sleep(3);
 			//	List<WebElement> ColorList = Driver.findElements(By.cssSelector("[data-attribute='PRODUCT_ATTR_PRODUCT_ATTR_COLOUR'] button"));
 			//for ( int j = 0 ; j<ColorList.size(); j++ )
 			//{
@@ -98,7 +97,7 @@ public class ScrappingDataPage extends PageBase {
 
 			WebElement ProductName  = Driver.findElement(By.className("product__name"));
 
-			WebElement ProductPrice = Driver.findElement(By.className("price-display__from"));
+			WebElement ProductPrice = Driver.findElement(By.className("price-display__selling"));
 
 			WebElement ProductBrand = Driver.findElement(By.className("product__brand"));
 
@@ -111,7 +110,7 @@ public class ScrappingDataPage extends PageBase {
 			WebElement ProductCode = Driver.findElement(By.className("description__style"));
 
 			String SKU = AddtoBagBtn.getAttribute("data-partnumber");
-			sleep(10);
+			sleep(2);
 			List <WebElement> SizeList = Driver.findElements(By.cssSelector("[data-attribute='PRODUCT_ATTR_SIZE_UK'] button"));
 			for (int k=0 ;k<SizeList.size();k++ )
 			{
@@ -141,18 +140,25 @@ public class ScrappingDataPage extends PageBase {
 				//	countf++;
 				//}
 			}
-			js.executeScript("window.scroll({top: 1000, left: 0, behavior: 'smooth'});");
+			js.executeScript("window.scroll({top: 2000, left: 0, behavior: 'smooth'});");
+			sleep(5);
 			List <WebElement> ImageList = Driver.findElements(By.cssSelector(".product-page__images-container .product-image .product-image__image"));
-			int count = 0 ;
+			ArrayList<String> imagesrclist =new ArrayList<String>();
 			for (int i = 0 ; i<ImageList.size(); i++)
 			{		
 				WebElement ImageList2 = ImageList.get(i);
 				String ImageSrc = ImageList2.getAttribute("src");
-				URL ImageURL = new URL (ImageSrc);
+				imagesrclist.add(ImageSrc);
+
+			}
+			String FOLDER = "C:\\Users\\rania.rashad\\Desktop\\Automation\\AutomationFramework-master\\";
+			for (int j = 0 ; j<imagesrclist.size() ; j++)
+			{
+				URL  ImageURL = new URL (imagesrclist.get(j));
 				BufferedImage SaveImage = ImageIO.read(ImageURL);
-				sleep(5);
-				ImageIO.write(SaveImage, "png", new File(SKU + count +".png"));	
-				count++;
+				File file = new File(FOLDER + j);
+				file.mkdirs();
+				ImageIO.write(SaveImage, "png", new File(file , SKU +".png"));	
 			}
 		}
 		WriteDataToExcelSheet(FilePath, productelements);
@@ -168,7 +174,7 @@ public class ScrappingDataPage extends PageBase {
 		CatSheet.createRow(0).createCell(0).setCellValue("Cat1En");
 		CatSheet.createRow(0).createCell(1).setCellValue("Cat1Ar");
 		CatSheet.createRow(0).createCell(2).setCellValue("Cat1Enable");
-		XSSFSheet sheet = wb.createSheet("Products");
+		XSSFSheet sheet = wb.getSheet("Products");
 		sheet.createRow(1).createCell(0).setCellValue("ProductCode");
 		sheet.getRow(1).createCell(1).setCellValue("SKU");
 		sheet.getRow(1).createCell(2).setCellValue("NameEn");
